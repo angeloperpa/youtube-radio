@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YouTube Related Player</title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<style type="text/css">
+		.search-area {
+			width: 320px;
+			margin: 10% auto;
+			padding: 10px;
+		}
+		.controls {
+			bottom: 0px;
+			position: absolute;
+			width: 80%;
+			margin-left: 10%;
+		}
+		#player-placeholder {
+			display: none;
+		}
+		#playPause-icon {
+			color: black;
+			font-size: 25px;
+		}
+		#thumbnail {
+			width: 256px;
+			height: 144px;
+			background-color: black;
+			margin-bottom: 30px;
+			background-size: 100%;
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+	</style>
+</head>
+<body>
+	<section class="search-area">
+		<section class="input-group">
+			<input value="moon hydrogen" id="query" type="text" class="form-control text-center">
+			<span class="input-group-btn">
+				<button id="search-button" class="btn btn-default" type="button" disabled><span class="glyphicon glyphicon-ok"></span></button>
+			</span>
+		</section>
+	</section>
+	<section class="controls">
+		<section id="title"></section>
+		<section id="thumbnail"></section>
+		<span id="current-time"></span> / <span id="duration"></span><br>
+		<a id="playPause"><span id="playPause-icon" class="glyphicon glyphicon-play"></span></a>
+		<input value="0" type="range" id="progress">
+	</section>
+	<section id="player-placeholder"></section>
+	<script src="js/youtube.related.player.js"></script>
+	<script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+</body>
+</html>
