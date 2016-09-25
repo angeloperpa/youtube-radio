@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>YouTube Related Player</title>
+	<title>RelatedPlayer</title>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://www.youtube.com/iframe_api"></script>
 	<style type="text/css">
+		@import 'https://fonts.googleapis.com/css?family=Chathura';
+		body {
+			font-family: 'Chathura', sans-serif;
+			font-size: 22px;
+		}
+		.jumbotron {
+			color: white;
+			background: rgba(0, 0, 0, 0.8);
+		}
 		.search-area {
 			width: 320px;
-			margin: 10% auto;
+			margin: auto;
 			padding: 10px;
+		}
+		.form-control {
+			font-size: 25px;
 		}
 		.controls {
 			bottom: 0px;
@@ -21,15 +33,27 @@
 		#player-placeholder {
 			display: none;
 		}
-		#playPause-icon {
-			color: black;
+		.control-icons {
+			color: #ff768e;
 			font-size: 25px;
+			cursor: pointer;
+		}
+		.control-icons:hover {
+			color: #fe92a5;
+		}
+		#volume {
+			width: 150px;
+			height: 20px;
+			display: inline-block;
+			margin-left: 0px;
+			padding-top: 5px;
+			margin-right: 20px;
 		}
 		#thumbnail {
 			width: 256px;
 			height: 144px;
 			background-color: black;
-			margin-bottom: 30px;
+			margin-bottom: 5px;
 			background-size: 100%;
 			background-repeat: no-repeat;
 			background-position: center center;
@@ -37,19 +61,24 @@
 	</style>
 </head>
 <body>
-	<section class="search-area">
-		<section class="input-group">
-			<input value="moon hydrogen" id="query" type="text" class="form-control text-center">
-			<span class="input-group-btn">
-				<button id="search-button" class="btn btn-default" type="button" disabled><span class="glyphicon glyphicon-ok"></span></button>
-			</span>
+	<section class="jumbotron text-center">
+		<h2>RelatedPlayer</h2>
+		<section class="search-area">
+			<section class="input-group">
+				<input value="moon hydrogen" id="query" type="text" class="form-control text-center">
+				<span class="input-group-btn">
+					<button id="search-button" class="btn btn-default" type="button" disabled><span class="glyphicon glyphicon-ok"></span></button>
+				</span>
 		</section>
+	</section>
 	</section>
 	<section class="controls">
 		<section id="title"></section>
 		<section id="thumbnail"></section>
 		<span id="current-time"></span> / <span id="duration"></span><br>
-		<a id="playPause"><span id="playPause-icon" class="glyphicon glyphicon-play"></span></a>
+		<a id="playPause" class="control-icons"><span id="playPause-icon" class="glyphicon glyphicon-play"></span></a>
+		<a id="nextVideo" class="control-icons"><span id="playPause-icon" class="glyphicon glyphicon-forward"></span></a>
+		<input type="range" min="0" max="100" value="100" id="volume"><a id="mute" class="control-icons"><span id="mute-icon" class="glyphicon glyphicon-volume-up"></span></a>
 		<input value="0" type="range" id="progress">
 	</section>
 	<section id="player-placeholder"></section>

@@ -39,7 +39,11 @@ function search() {
 $('#search-button').click(function() {
 	search();
 });
-
+$('#query').keypress(function(e) {
+	if(e.which == 13) {
+		search();
+	}
+});
 var player;
 
 function playerCreator(id) {
@@ -107,6 +111,24 @@ $('#playPause').click(function() {
 		player.playVideo();
 		$('#playPause-icon').removeClass('glyphicon-play');
 		$('#playPause-icon').addClass('glyphicon-pause');
+	}
+});
+$('#nextVideo').click(function() {
+	nextVideo(id);
+});
+$('#volume').on('change', function() {
+	player.setVolume($(this).val());
+});
+$('#mute').click(function() {
+	if(player.isMuted()) {
+		player.unMute();
+		$('#mute-icon').removeClass('glyphicon-volume-off');
+		$('#mute-icon').addClass('glyphicon-volume-up');
+	}
+	else {
+		player.mute();
+		$('#mute-icon').removeClass('glyphicon-volume-up');
+		$('#mute-icon').addClass('glyphicon-volume-off');
 	}
 });
 function nextVideo(id_next) {
