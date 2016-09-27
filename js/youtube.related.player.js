@@ -12,29 +12,74 @@ function handleAPILoaded() {
   $('#search-button').attr('disabled', false);
 }
 
-var id;
+var videos = [];
+var current = 0;
+
+function video(title, id, thumbnail) {
+	this.title = title;
+	this.id = id;
+	this.thumbnail = thumbnail;
+}
 
 function search() {
+	clearList();
+	current = 0;
 	var q = $('#query').val();
 	var request = gapi.client.youtube.search.list({
 		q: q,
 		part: 'snippet',
 		maxResults: 1,
 	});
-
 	request.execute(function(response){
 		var resultItems = response.result.items;
 		$.each(resultItems, function(index, item) {
-			title = item.snippet.title;
-			$('#title').html(title);
-
-			id = item.id.videoId;
-			
-			thumbnail = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
-			$('#thumbnail').css('background-image','url("' + thumbnail + '")');
-			playerCreator(id);
+			var title = item.snippet.title;
+			var id = item.id.videoId;
+			var thumbnail = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+			var vid = new video(title, id, thumbnail);
+			videos.push(vid);
+			createList(id);
+			playerCreator();
+		})
+	});	
+}
+function createList(id_list) {
+	var request = gapi.client.youtube.search.list({
+		part: 'snippet',
+		relatedToVideoId: id_list,
+		maxResults: 20,
+		type: 'video'
+	});
+	request.execute(function(response){
+		var resultItems = response.result.items;
+		$.each(resultItems, function(index, item) {
+			var title = item.snippet.title;
+			var id = item.id.videoId;
+			var thumbnail = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+			var vid = new video(title, id, thumbnail);
+			videos.push(vid);
 		})
 	});
+}
+function clearList() {
+	var videos_val = videos.length
+	for(var i = 0; i < videos_val; i++) {
+		videos.pop();
+	}
+}
+function nextVideo() {
+	current++;
+	if((videos.length - 1) == current) {
+		console.log(current);
+		var id = videos[current].id;
+		playerCreator();
+		clearList();
+		createList(id);
+		current = -1;
+	}
+	else {
+		playerCreator();
+	}
 }
 $('#search-button').click(function() {
 	search();
@@ -44,6 +89,7 @@ $('#query').keypress(function(e) {
 		search();
 	}
 });
+
 var player;
 
 function playerCreator(id) {
@@ -51,6 +97,13 @@ function playerCreator(id) {
 	$('body').append($('<section/>', {
 		id: 'player-placeholder'
 	}));
+
+	var title = videos[current].title;	
+	var thumbnail = videos[current].thumbnail;
+	var id = videos[current].id;
+
+	$('#title').html(title);			
+	$('#thumbnail').css('background-image','url("' + thumbnail + '")');
 	player = new YT.Player('player-placeholder', {
 		videoId: id,
 		width: 0,
@@ -85,10 +138,10 @@ function updateTimerDisplay() {
 	$('#current-time').text(formatTime(player.getCurrentTime()));
 	$('#duration').text(formatTime(player.getDuration()));
 	if(player.getDuration() == player.getCurrentTime()) {
-		nextVideo(id);
+		nextVideo();
 	}
 	if(player.getPlayerState() == -1) {
-		nextVideo(id);
+		nextVideo();
 	}
 }
 function formatTime(time) {
@@ -114,7 +167,7 @@ $('#playPause').click(function() {
 	}
 });
 $('#nextVideo').click(function() {
-	nextVideo(id);
+	nextVideo();
 });
 $('#volume').on('change', function() {
 	player.setVolume($(this).val());
@@ -131,26 +184,3 @@ $('#mute').click(function() {
 		$('#mute-icon').addClass('glyphicon-volume-off');
 	}
 });
-function nextVideo(id_next) {
-	var request = gapi.client.youtube.search.list({
-		part: 'snippet',
-		relatedToVideoId: id_next,
-		maxResults: 1,
-		type: 'video'
-	});
-	request.execute(function(response){
-		var resultItems = response.result.items;
-		$.each(resultItems, function(index, item) {
-			title = item.snippet.title;
-			$('#title').html(title);
-
-			id = item.id.videoId;
-			$('#playPause-icon').removeClass('glyphicon-pause');
-			$('#playPause-icon').addClass('glyphicon-play');	
-			
-			thumbnail = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
-			$('#thumbnail').css('background-image','url("' + thumbnail + '")');
-			playerCreator(id);
-		})
-	});
-}
